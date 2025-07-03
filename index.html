@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TOEFL Matching Game</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="game-container">
+      <h1>🎓 MATCHING TOEFL!</h1>
+      <div id="stats">
+        <span id="timer">⏱️ 2:00</span>
+        <span id="moves">Moves: 24</span>
+      </div>
+      <div id="game-board" class="board"></div>
+      <div id="message"></div>
+    </div>
+
+    <div id="cta-popup" class="hidden">
+      <h2>You lost! 😓</h2>
+      <p>Kamu mau dibantu belajar TOEFL secara gratis?</p>
+      <a href="https://wa.me/628xxxxxxxxxx" target="_blank"
+        >📲 Chat Kami via WhatsApp</a
+      >
+      <button onclick="restartGame()">🔄 Coba Lagi</button>
+    </div>
+
+    <footer>🎮 Game by Rifat</footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>
