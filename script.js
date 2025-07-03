@@ -1,4 +1,4 @@
-const words = [
+const wordPairs = [
   ["Abandon", "To leave behind"],
   ["Brief", "Short in duration"],
   ["Capable", "Able to do something"],
@@ -7,99 +7,95 @@ const words = [
   ["Fluctuate", "To change irregularly"],
 ];
 
-let cards = [],
-  moves = 24,
-  matched = 0;
-let timer,
-  timeLeft = 120;
+let moves = 24;
+let timeLeft = 120;
+let matched = 0;
+let flipped = [];
+let timer = null;
 
 function shuffle(array) {
   return array.sort(() => Math.random() - 0.5);
 }
 
 function startGame() {
-  const board = document.getElementById("game-board");
-  board.innerHTML = "";
+  const flatCards = shuffle(wordPairs.flat());
+  const $board = $("#game-board");
+  $board.empty();
   matched = 0;
   moves = 24;
-  document.getElementById("moves").textContent = `Moves: ${moves}`;
-  document.getElementById("cta-popup").style.display = "none";
+  timeLeft = 120;
+  flipped = [];
 
-  // Flatten vocab pairs
-  const flatCards = shuffle(
-    words
-      .slice(0, 6)
-      .map(([word, def]) => [word, def])
-      .flat()
-  );
+  $("#timer").text("2:00");
+  $("#moves").text(moves);
 
-  cards = flatCards.map((text, i) => {
-    const card = document.createElement("div");
-    card.className = "card";
-    card.dataset.value = text;
-    card.textContent = "?";
-    card.onclick = () => flipCard(card);
-    board.appendChild(card);
-    return card;
+  flatCards.forEach((value) => {
+    const $col = $("<div>").addClass("col");
+    const $card = $("<div>")
+      .addClass("card-box")
+      .attr("data-value", value)
+      .text("?")
+      .on("click", function () {
+        flipCard($(this));
+      });
+    $col.append($card);
+    $board.append($col);
   });
 
   startTimer();
 }
 
-let flipped = [];
-
-function flipCard(card) {
+function flipCard($card) {
   if (
-    flipped.length === 2 ||
-    card.classList.contains("matched") ||
-    flipped.includes(card)
+    flipped.length >= 2 ||
+    $card.hasClass("matched") ||
+    flipped.includes($card[0])
   )
     return;
 
-  card.textContent = card.dataset.value;
-  flipped.push(card);
+  $card.text($card.data("value"));
+  flipped.push($card[0]);
 
   if (flipped.length === 2) {
     moves--;
-    document.getElementById("moves").textContent = `Moves: ${moves}`;
-    const [a, b] = flipped;
+    $("#moves").text(moves);
 
-    const match = words.some(
-      ([w, d]) =>
-        (a.dataset.value === w && b.dataset.value === d) ||
-        (a.dataset.value === d && b.dataset.value === w)
-    );
+    const $a = $(flipped[0]);
+    const $b = $(flipped[1]);
+
+    const match = wordPairs.some(([word, def]) => {
+      return (
+        ($a.data("value") === word && $b.data("value") === def) ||
+        ($a.data("value") === def && $b.data("value") === word)
+      );
+    });
 
     setTimeout(() => {
       if (match) {
-        a.classList.add("matched");
-        b.classList.add("matched");
-        matched += 1;
+        $a.addClass("matched");
+        $b.addClass("matched");
+        matched++;
         if (matched === 6) return winGame();
       } else {
-        a.textContent = "?";
-        b.textContent = "?";
+        $a.text("?");
+        $b.text("?");
       }
 
-      if (moves <= 0) loseGame();
-
       flipped = [];
-    }, 800);
+
+      if (moves <= 0) loseGame();
+    }, 600);
   }
 }
 
 function startTimer() {
   clearInterval(timer);
-  timeLeft = 120;
-  document.getElementById("timer").textContent = "⏱️ 2:00";
-
   timer = setInterval(() => {
     timeLeft--;
     const mins = Math.floor(timeLeft / 60);
     const secs = timeLeft % 60;
-    document.getElementById("timer").textContent = `⏱️ ${mins}:${
-      secs < 10 ? "0" : ""
-    }${secs}`;
+    $("#timer").text(`${mins}:${secs < 10 ? "0" : ""}${secs}`);
+
     if (timeLeft <= 0) {
       clearInterval(timer);
       loseGame();
@@ -107,18 +103,23 @@ function startTimer() {
   }, 1000);
 }
 
-function loseGame() {
-  document.getElementById("cta-popup").style.display = "block";
-}
-
 function winGame() {
   clearInterval(timer);
-  alert("🎉 You matched all pairs! Well done.");
-  // You could add confetti here
+  alert("🎉 Congratulations! You matched all pairs.");
 }
 
-function restartGame() {
+function loseGame() {
+  clearInterval(timer);
+  const loseModal = new bootstrap.Modal($("#loseModal")[0]);
+  loseModal.show();
+}
+
+$(document).ready(() => {
+  $("#restart-btn").on("click", () => {
+    const modal = bootstrap.Modal.getInstance($("#loseModal")[0]);
+    modal.hide();
+    startGame();
+  });
+
   startGame();
-}
-
-startGame();
+});
