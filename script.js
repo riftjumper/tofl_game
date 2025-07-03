@@ -1,3 +1,22 @@
+const wordPairs = [
+  ["Abandon", "To leave behind"],
+  ["Brief", "Short in duration"],
+  ["Capable", "Able to do something"],
+  ["Deteriorate", "To become worse"],
+  ["Essential", "Absolutely necessary"],
+  ["Fluctuate", "To change irregularly"],
+];
+
+let moves = 24;
+let timeLeft = 120;
+let matched = 0;
+let flipped = [];
+let timer = null;
+
+function shuffle(array) {
+  return array.sort(() => Math.random() - 0.5);
+}
+
 function startGame() {
   const flatCards = shuffle(wordPairs.flat());
   const $board = $("#game-board");
@@ -77,3 +96,39 @@ function flipCard($cardInner) {
     }, 900);
   }
 }
+
+function startTimer() {
+  clearInterval(timer);
+  timer = setInterval(() => {
+    timeLeft--;
+    const mins = Math.floor(timeLeft / 60);
+    const secs = timeLeft % 60;
+    $("#timer").text(`${mins}:${secs < 10 ? "0" : ""}${secs}`);
+
+    if (timeLeft <= 0) {
+      clearInterval(timer);
+      loseGame();
+    }
+  }, 1000);
+}
+
+function winGame() {
+  clearInterval(timer);
+  alert("🎉 Congratulations! You matched all pairs.");
+}
+
+function loseGame() {
+  clearInterval(timer);
+  const loseModal = new bootstrap.Modal($("#loseModal")[0]);
+  loseModal.show();
+}
+
+$(document).ready(() => {
+  $("#restart-btn").on("click", () => {
+    const modal = bootstrap.Modal.getInstance($("#loseModal")[0]);
+    modal.hide();
+    startGame();
+  });
+
+  startGame();
+});
