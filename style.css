@@ -1,16 +1,41 @@
 .card-box {
-  background-color: white;
-  height: 80px;
-  line-height: 80px;
-  font-size: 18px;
-  border: 2px solid #dee2e6;
-  border-radius: 8px;
-  cursor: pointer;
-  user-select: none;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  perspective: 1000px;
+  height: 100px;
 }
 
-.card-box.matched {
-  background-color: #d4edda;
+.card-inner {
+  width: 100%;
+  height: 100%;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+  position: relative;
+}
+
+.card-flip {
+  transform: rotateY(180deg);
+}
+
+.card-front,
+.card-back {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  border-radius: 8px;
+  border: 2px solid #dee2e6;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 16px;
+  backface-visibility: hidden;
+  background-color: white;
+}
+
+.card-back {
+  transform: rotateY(180deg);
+  background-color: #f8f9fa;
+}
+.matched .card-inner {
   pointer-events: none;
+  box-shadow: 0 0 0 2px green !important;
 }

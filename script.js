@@ -1,22 +1,3 @@
-const wordPairs = [
-  ["Abandon", "To leave behind"],
-  ["Brief", "Short in duration"],
-  ["Capable", "Able to do something"],
-  ["Deteriorate", "To become worse"],
-  ["Essential", "Absolutely necessary"],
-  ["Fluctuate", "To change irregularly"],
-];
-
-let moves = 24;
-let timeLeft = 120;
-let matched = 0;
-let flipped = [];
-let timer = null;
-
-function shuffle(array) {
-  return array.sort(() => Math.random() - 0.5);
-}
-
 function startGame() {
   const flatCards = shuffle(wordPairs.flat());
   const $board = $("#game-board");
@@ -31,30 +12,40 @@ function startGame() {
 
   flatCards.forEach((value) => {
     const $col = $("<div>").addClass("col");
-    const $card = $("<div>")
+
+    const $cardInner = $("<div>")
+      .addClass("card-inner")
+      .attr("data-value", value);
+
+    const $front = $("<div>").addClass("card-front").text("?");
+    const $back = $("<div>").addClass("card-back").text(value);
+
+    $cardInner.append($front, $back);
+
+    const $cardBox = $("<div>")
       .addClass("card-box")
-      .attr("data-value", value)
-      .text("?")
+      .append($cardInner)
       .on("click", function () {
-        flipCard($(this));
+        flipCard($(this).find(".card-inner"));
       });
-    $col.append($card);
+
+    $col.append($cardBox);
     $board.append($col);
   });
 
   startTimer();
 }
 
-function flipCard($card) {
+function flipCard($cardInner) {
   if (
+    $cardInner.hasClass("card-flip") ||
     flipped.length >= 2 ||
-    $card.hasClass("matched") ||
-    flipped.includes($card[0])
+    $cardInner.parent().hasClass("matched")
   )
     return;
 
-  $card.text($card.data("value"));
-  flipped.push($card[0]);
+  $cardInner.addClass("card-flip");
+  flipped.push($cardInner[0]);
 
   if (flipped.length === 2) {
     moves--;
@@ -63,63 +54,26 @@ function flipCard($card) {
     const $a = $(flipped[0]);
     const $b = $(flipped[1]);
 
-    const match = wordPairs.some(([word, def]) => {
-      return (
+    const match = wordPairs.some(
+      ([word, def]) =>
         ($a.data("value") === word && $b.data("value") === def) ||
         ($a.data("value") === def && $b.data("value") === word)
-      );
-    });
+    );
 
     setTimeout(() => {
       if (match) {
-        $a.addClass("matched");
-        $b.addClass("matched");
+        $a.parent().addClass("matched");
+        $b.parent().addClass("matched");
         matched++;
         if (matched === 6) return winGame();
       } else {
-        $a.text("?");
-        $b.text("?");
+        $a.removeClass("card-flip");
+        $b.removeClass("card-flip");
       }
 
       flipped = [];
 
       if (moves <= 0) loseGame();
-    }, 600);
+    }, 900);
   }
 }
-
-function startTimer() {
-  clearInterval(timer);
-  timer = setInterval(() => {
-    timeLeft--;
-    const mins = Math.floor(timeLeft / 60);
-    const secs = timeLeft % 60;
-    $("#timer").text(`${mins}:${secs < 10 ? "0" : ""}${secs}`);
-
-    if (timeLeft <= 0) {
-      clearInterval(timer);
-      loseGame();
-    }
-  }, 1000);
-}
-
-function winGame() {
-  clearInterval(timer);
-  alert("🎉 Congratulations! You matched all pairs.");
-}
-
-function loseGame() {
-  clearInterval(timer);
-  const loseModal = new bootstrap.Modal($("#loseModal")[0]);
-  loseModal.show();
-}
-
-$(document).ready(() => {
-  $("#restart-btn").on("click", () => {
-    const modal = bootstrap.Modal.getInstance($("#loseModal")[0]);
-    modal.hide();
-    startGame();
-  });
-
-  startGame();
-});
