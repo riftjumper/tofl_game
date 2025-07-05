@@ -1,59 +1,75 @@
-<!DOCTYPE html>
-<html lang="="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TOEFL Matching Game</title>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TOEFL Matching Game</title>
 
-  <!-- jQuery -->
-  <script src="./node_modules/jquery/dist/jquery.min.js"></script>
+    <!-- jQuery -->
+    <script src="./node_modules/jquery/dist/jquery.min.js"></script>
 
-  <!-- Bootstrap JS -->
-  <script src="./node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="./node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 
-  <!-- Your Game Script -->
-  <script src="script.js"></script>
-</head>
-<body class="bg-light">
+    <!-- Your Game Script -->
+    <script src="script.js"></script>
+  </head>
+  <body class="bg-light">
+    <div class="container text-center py-4">
+      <h1 class="mb-3">🎓 TOEFL Matching Game</h1>
 
-  <div class="container text-center py-4">
-    <h1 class="mb-3">🎓 TOEFL Matching Game</h1>
+      <div
+        class="d-flex justify-content-between bg-white p-3 rounded shadow-sm mb-3"
+      >
+        <div><strong>⏱️ Time:</strong> <span id="timer">2:00</span></div>
+        <div><strong>🎯 Moves:</strong> <span id="moves">24</span></div>
+      </div>
 
-    <div class="d-flex justify-content-between bg-white p-3 rounded shadow-sm mb-3">
-      <div><strong>⏱️ Time:</strong> <span id="timer">2:00</span></div>
-      <div><strong>🎯 Moves:</strong> <span id="moves">24</span></div>
+      <div id="game-board" class="row row-cols-3 row-cols-md-4 g-3"></div>
+
+      <div id="message" class="mt-3"></div>
     </div>
 
-    <div id="game-board" class="row row-cols-3 row-cols-md-4 g-3"></div>
-
-    <div id="message" class="mt-3"></div>
-  </div>
-
-  <!-- Lose Modal with CTA -->
-  <div class="modal fade" id="loseModal" tabindex="-1" aria-labelledby="loseModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content border-danger">
-        <div class="modal-header bg-danger text-white">
-          <h5 class="modal-title" id="loseModalLabel">😓 Time's Up or Moves Exhausted!</h5>
-        </div>
-        <div class="modal-body text-center">
-          <p>Mau dibantu belajar TOEFL? 📚</p>
-          <a href="https://wa.me/628xxxxxxxxxx" target="_blank" class="btn btn-success mb-2">Chat via WhatsApp</a><br>
-          <button id="restart-btn" class="btn btn-outline-danger">🔄 Coba Lagi</button>
+    <!-- Lose Modal with CTA -->
+    <div
+      class="modal fade"
+      id="loseModal"
+      tabindex="-1"
+      aria-labelledby="loseModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-danger">
+          <div class="modal-header bg-danger text-white">
+            <h5 class="modal-title" id="loseModalLabel">
+              😓 Time's Up or Moves Exhausted!
+            </h5>
+          </div>
+          <div class="modal-body text-center">
+            <p>Mau dibantu belajar TOEFL? 📚</p>
+            <a
+              href="https://wa.me/628xxxxxxxxxx"
+              target="_blank"
+              class="btn btn-success mb-2"
+              >Chat via WhatsApp</a
+            ><br />
+            <button id="restart-btn" class="btn btn-outline-danger">
+              🔄 Coba Lagi
+            </button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <footer class="text-center py-4 text-muted">
-    Game by Rifat • TOEFL Matching Game
-  </footer>
+    <footer class="text-center py-4 text-muted">
+      Game by Rifat • TOEFL Matching Game
+    </footer>
 
-  <!-- jQuery -->
-  <script src="./node_modules/jquery/dist/jquery.min.js"></script>
-  <!-- Bootstrap JS -->
-  <script src="./node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-  <!-- Custom Game Script -->
-  <script src="script.js"></script>
-</body>
+    <!-- jQuery -->
+    <script src="./node_modules/jquery/dist/jquery.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="./node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom Game Script -->
+    <script src="script.js"></script>
+  </body>
 </html>
